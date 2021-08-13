@@ -1,84 +1,119 @@
-import "./styles/index.scss";
-// build canvas
-let canvas = document.getElementById("canvas");
-// canvas.width = window.innerWidth;
-// canvas.height = window.innerHeight;
+import "./styles/index.css";
 
-let ctx = canvas.getContext("2d");
+const container = document.getElementById("container");
+const canvas = document.getElementById("canvas1");
+const file = document.getElementById("fileupload");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+const ctx = canvas.getContext("2d");
 
-//create audio element
-let audioElement = document.getElementById("source");
-let audioCtx = new AudioContext();
-let analyser = audioCtx.createAnalyser();
+ctx.lineWidth = 2;
+ctx.globalCompositeOperation = "difference";
 
-//how big the data array is
-analyser.fftSize = 2048;
+let audioSource;
+let analyser;
 
-let source = audioCtx.createMediaElementSource(audioElement);
-source.connect(analyser);
-source.connect(audioCtx.destination);
+container.addEventListener("click", function () {
+  // runs if you click anywhere in the container
+  const audio1 = document.getElementById("audio1");
+  const audioCtx = new AudioContext();
+  audio1.play();
+  audioSource = audioCtx.createMediaElementSource(audio1);
+  analyser = audioCtx.createAnalyser();
+  audioSource.connect(analyser);
+  analyser.connect(audioCtx.destination);
+  analyser.fftSize = 128;
+  const bufferLength = analyser.frequencyBinCount;
+  const dataArray = new Uint8Array(bufferLength);
 
-//creating data array as only positive numbers
-let data = new Uint8Array(analyser.frequencyBinCount);
-
-//creating random color generator
-// const chars = "abcdef0123456789".split("");
-const chars = "#FFFF00#FFFF33#F2EA02#E6FB04#FF0000#FD1C03#FF3300#FF6600#00FF00#00FF33#00FF66#33FF00#00FFFF#099FFF#0062FF#0033FF#FF00FF#FF00CC#FF0099#CC00FF#9D00FF#CC00FF#6E0DD0#9900FF".split(
-    "#"
-);
-const sample = (array) => {
-    return array[Math.floor(Math.random() * array.length)];
-};
-
-const randomColorGenerator = () => {
-    // return `#${sample(chars)}${sample(chars)}${sample(chars)}${sample(
-    //     chars
-    // )}${sample(chars)}${sample(chars)}`;
-    return `#${sample(chars)}`;
-};
-
-//setting ctx line width
-ctx.lineWidth = 1;
-
-//creating the looping function for animation
-function loopingFunction() {
-    setTimeout(() => requestAnimationFrame(loopingFunction), 50);
-    analyser.getByteFrequencyData(data);
-    draw(data);
-}
-
-function draw(data) {
-    data = [...data];
+  let barWidth = 15;
+  let barHeight;
+  let x;
+  // animate loop
+  const animate = () => {
+    x = 0;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    let space = canvas.width / data.length;
-    data.forEach((value, i) => {
-        ctx.strokeStyle = randomColorGenerator();
-        ctx.beginPath();
-        // ctx.arc(
-        //     // Math.floor(Math.random() * canvas.width),
-        //     space * i,
-        //     // Math.floor(Math.random() * canvas.height),
-        //     canvas.height - value * 2,
-        //     value / 10,
-        //     5,
-        //     2 * Math.PI
-        // );
-        // ctx.fillStyle = randomColorGenerator();
-        // ctx.fillRect(20, 20, 150, 100);
+    analyser.getByteFrequencyData(dataArray);
+    drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray);
+    requestAnimationFrame(animate);
+  };
+  animate();
+});
 
-        // ctx.stroke();
-        let rand = Math.floor(Math.random() * canvas.width);
-        ctx.moveTo(space * i, canvas.height); //x,y
-        ctx.lineTo(space * i, canvas.height - value); //x,y
-        // ctx.font = "30px Comic Sans MS";
-        // ctx.fillStyle = "white";
-        // ctx.fillText(`${value}`, canvas.width - 100, 100);
+// file upload
+file.addEventListener("change", function () {
+  const files = this.files;
+  const audio1 = document.getElementById("audio1");
+  audio1.src = URL.createObjectURL(files[0]);
+  audio1.load();
+  audio1.play();
+});
 
-        ctx.stroke();
-    });
+// draw rotation visualizer
+// function drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray) {
+//   for (let i = 0; i < bufferLength; i++) {
+//     // dataArray values range from 0 - 250
+//     barHeight = dataArray[i] * 5;
+//     // creates a savepoint for the canvas
+//     ctx.save();
+//     // translates 0,0 postion from top right to center
+//     ctx.translate(canvas.width / 2, canvas.height / 2);
+//     // rotates canvas a certain amount of radians
+//     ctx.rotate(i + (Math.PI * 2) / bufferLength);
+//     //colors
+//     const red = (i * barHeight) / 20;
+//     const green = i / 4;
+//     const blue = barHeight / 2;
+//     ctx.fillStyle = `rgb(${red}, ${green}, ${blue})`;
+//     ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+//     x += barWidth;
+//     ctx.restore();
+//   }
+// }
+
+// firework
+// function drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray) {
+//   for (let i = 0; i < bufferLength; i++) {
+//     // dataArray values range from 0 - 250
+//     barHeight = dataArray[i] * 1.5;
+//     // creates a savepoint for the canvas
+//     ctx.save();
+//     // translates 0,0 postion from top right to center
+//     ctx.translate(canvas.width / 2, canvas.height / 2);
+//     // rotates canvas a certain amount of radians
+//     ctx.rotate(i * 3);
+//     //colors
+//     const hue = i * 0.3;
+//     ctx.fillStyle = `hsl(${hue}, 100%, ${barHeight / 3}%)`;
+//     ctx.fillRect(0, 0, barWidth, barHeight);
+//     x += barWidth;
+//     ctx.restore();
+//   }
+// }
+
+function drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray) {
+  for (let i = 0; i < bufferLength; i++) {
+    // dataArray values range from 0 - 250
+    barHeight = dataArray[i] * 1.5;
+    // creates a savepoint for the canvas
+    ctx.save();
+    // translates 0,0 postion from top right to center
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+    // rotates canvas a certain amount of radians
+    ctx.rotate(i * 3.2);
+    //colors
+    const hue = i * 0.1;
+    ctx.strokeStyle = `hsl(${hue}, 100%, ${barHeight / 3}%)`;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(0, barHeight);
+    ctx.stroke();
+    x += barWidth;
+    if (i > bufferLength * 0.6) {
+      ctx.beginPath();
+      ctx.arc(0, 0, barHeight, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
 }
-
-audioElement.onplay = () => {
-    audioCtx.resume();
-    loopingFunction();
-};
