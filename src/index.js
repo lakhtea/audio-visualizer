@@ -26,8 +26,6 @@ let y = canvas.height / 2;
 container.addEventListener("click", function () {
   const audio1 = document.getElementById("audio1");
   const audioCtx = new AudioContext();
-  audio1.src = "https://lakhtea.github.io/jsProject/src/music/7rings.mp3";
-
   try {
     audioSource = audioCtx.createMediaElementSource(audio1);
   } catch (error) {
