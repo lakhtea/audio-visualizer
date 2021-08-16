@@ -23,14 +23,11 @@ let barWidth = 15;
 let x = canvas.width / 2;
 let y = canvas.height / 2;
 
-const myStorage = window.localStorage;
-
-localStorage.setItem("7rings", URL.createObjectURL(audio1.src));
-
 container.addEventListener("click", function () {
   const audio1 = document.getElementById("audio1");
-  audio1.src = localStorage.getItem("7rings");
   const audioCtx = new AudioContext();
+  audio1.src = "https://lakhtea.github.io/jsProject/src/music/7rings.mp3";
+
   try {
     audioSource = audioCtx.createMediaElementSource(audio1);
   } catch (error) {
