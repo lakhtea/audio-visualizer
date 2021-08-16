@@ -1,40 +1,67 @@
 import "./styles/index.css";
+import "./scrubBar";
+
+import { playVisualizer } from "./mainVisualizer";
 
 const container = document.getElementById("container");
-const canvas = document.getElementById("canvas1");
 const file = document.getElementById("fileupload");
+const canvas = document.getElementById("canvas1");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 const ctx = canvas.getContext("2d");
 
-ctx.lineWidth = 2;
-ctx.globalCompositeOperation = "difference";
+const canvas2 = document.getElementById("canvas2");
+canvas2.width = window.innerWidth;
+canvas2.height = window.innerHeight;
+const ctx2 = canvas2.getContext("2d");
 
 let audioSource;
 let analyser;
 
+let barWidth = 15;
+
+let x = canvas.width / 2;
+let y = canvas.height / 2;
+
 container.addEventListener("click", function () {
-  // runs if you click anywhere in the container
   const audio1 = document.getElementById("audio1");
   const audioCtx = new AudioContext();
-  audio1.play();
-  audioSource = audioCtx.createMediaElementSource(audio1);
+  try {
+    audioSource = audioCtx.createMediaElementSource(audio1);
+  } catch (error) {
+    return;
+  }
   analyser = audioCtx.createAnalyser();
   audioSource.connect(analyser);
   analyser.connect(audioCtx.destination);
-  analyser.fftSize = 128;
+  analyser.fftSize = 256;
   const bufferLength = analyser.frequencyBinCount;
   const dataArray = new Uint8Array(bufferLength);
-
-  let barWidth = 15;
-  let barHeight;
-  let x;
+  // runs if you click anywhere in the container
+  let height = canvas2.height;
+  let width = canvas2.width;
   // animate loop
   const animate = () => {
-    x = 0;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx2.clearRect(0, 0, canvas2.width, canvas2.height);
     analyser.getByteFrequencyData(dataArray);
-    drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray);
+
+    let currentTime = audio1.currentTime;
+    let duration = audio1.duration;
+
+    playVisualizer(
+      x,
+      y,
+      ctx,
+      bufferLength,
+      barWidth,
+      dataArray,
+      currentTime,
+      duration,
+      width,
+      height,
+      ctx2
+    );
     requestAnimationFrame(animate);
   };
   animate();
@@ -48,72 +75,3 @@ file.addEventListener("change", function () {
   audio1.load();
   audio1.play();
 });
-
-// draw rotation visualizer
-// function drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray) {
-//   for (let i = 0; i < bufferLength; i++) {
-//     // dataArray values range from 0 - 250
-//     barHeight = dataArray[i] * 5;
-//     // creates a savepoint for the canvas
-//     ctx.save();
-//     // translates 0,0 postion from top right to center
-//     ctx.translate(canvas.width / 2, canvas.height / 2);
-//     // rotates canvas a certain amount of radians
-//     ctx.rotate(i + (Math.PI * 2) / bufferLength);
-//     //colors
-//     const red = (i * barHeight) / 20;
-//     const green = i / 4;
-//     const blue = barHeight / 2;
-//     ctx.fillStyle = `rgb(${red}, ${green}, ${blue})`;
-//     ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-//     x += barWidth;
-//     ctx.restore();
-//   }
-// }
-
-// firework
-// function drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray) {
-//   for (let i = 0; i < bufferLength; i++) {
-//     // dataArray values range from 0 - 250
-//     barHeight = dataArray[i] * 1.5;
-//     // creates a savepoint for the canvas
-//     ctx.save();
-//     // translates 0,0 postion from top right to center
-//     ctx.translate(canvas.width / 2, canvas.height / 2);
-//     // rotates canvas a certain amount of radians
-//     ctx.rotate(i * 3);
-//     //colors
-//     const hue = i * 0.3;
-//     ctx.fillStyle = `hsl(${hue}, 100%, ${barHeight / 3}%)`;
-//     ctx.fillRect(0, 0, barWidth, barHeight);
-//     x += barWidth;
-//     ctx.restore();
-//   }
-// }
-
-function drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray) {
-  for (let i = 0; i < bufferLength; i++) {
-    // dataArray values range from 0 - 250
-    barHeight = dataArray[i] * 1.5;
-    // creates a savepoint for the canvas
-    ctx.save();
-    // translates 0,0 postion from top right to center
-    ctx.translate(canvas.width / 2, canvas.height / 2);
-    // rotates canvas a certain amount of radians
-    ctx.rotate(i * 3.2);
-    //colors
-    const hue = i * 0.1;
-    ctx.strokeStyle = `hsl(${hue}, 100%, ${barHeight / 3}%)`;
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(0, barHeight);
-    ctx.stroke();
-    x += barWidth;
-    if (i > bufferLength * 0.6) {
-      ctx.beginPath();
-      ctx.arc(0, 0, barHeight, 0, Math.PI * 2);
-      ctx.stroke();
-    }
-    ctx.restore();
-  }
-}

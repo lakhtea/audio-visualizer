@@ -4,11 +4,17 @@
   box-sizing: border-box;
 }
 
+body {
+  overflow: hidden;
+  color: white;
+  padding: 20px;
+}
+
 #container {
   position: absolute;
   top: 0;
   left: 0;
-  background-color: black;
+  background: linear-gradient(to bottom, #101435, #132356, #101435);
   width: 100%;
   height: 100%;
 }
@@ -19,17 +25,114 @@
   left: 0;
   width: 100%;
   height: 100%;
+  z-index: 2;
 }
 
-#audio1 {
-  width: 50%;
-  margin: 50px auto;
-  display: block;
+#canvas2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
 }
 
 #fileupload {
+  display: none;
+}
+
+.sliders {
+  width: 20%;
+  height: 25%;
   position: absolute;
-  top: 150px;
-  color: white;
-  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  background: linear-gradient(to bottom, #101435, #33447c, #101435);
+  border-top-right-radius: 25px;
+  bottom: 0;
+  transition: bottom 0.5s ease;
+}
+
+.sliders:hover {
+  bottom: 10px;
+}
+
+#scrub-container {
+  position: absolute;
+  width: 66.66%;
+  height: 10%;
+  min-height: 80px;
+  margin: 0 16.66% 2%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  z-index: 10;
+  background: linear-gradient(#2a3066, #4d609e, #2a3066);
+  border-radius: 50px;
+}
+
+#timeline {
+  width: 80%;
+  height: 30px;
+  z-index: 11;
+  background: linear-gradient(
+    to bottom,
+    rgb(164, 201, 218),
+    rgb(134, 134, 225),
+    rgb(164, 201, 218)
+  );
+  position: relative;
+  border-radius: 50px;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+
+#scrub {
+  width: 50px;
+  height: 50px;
+  background: radial-gradient(#ffffff, #0702f7);
+  border-radius: 50%;
+  top: -10px;
+  left: 10px;
+  cursor: move;
+  position: absolute;
+}
+
+#scrub:active {
+  cursor: move;
+}
+
+.play-pause {
+  position: absolute;
+  z-index: 11;
+  height: 50px;
+  width: 75px;
+  left: 25px;
+  top: 25px;
+  border-radius: 50px;
+  background: blue;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.file-upload {
+  position: absolute;
+  z-index: 11;
+  height: 50px;
+  width: 75px;
+  right: 25px;
+  top: 25px;
+  border-radius: 50px;
+  background: blue;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+span.material-icons {
+  font-size: 32px;
 }
