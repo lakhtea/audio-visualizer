@@ -2,6 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Exo", sans-serif;
 }
 
 body {
@@ -111,7 +112,7 @@ body {
   left: 25px;
   top: 25px;
   border-radius: 50px;
-  background: blue;
+  background: linear-gradient(#3d3085, #341e54, #501c5c);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -126,13 +127,21 @@ body {
   right: 25px;
   top: 25px;
   border-radius: 50px;
-  background: blue;
+  background: linear-gradient(#6550db, #7341bb, #832f96);
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  color: black;
 }
 
 span.material-icons {
   font-size: 32px;
+}
+
+#song-title {
+  position: absolute;
+  top: 10px;
+  font-size: 32px;
+  color: black;
 }

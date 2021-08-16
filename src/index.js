@@ -37,6 +37,10 @@ container.addEventListener("click", function () {
   analyser.fftSize = 256;
   const bufferLength = analyser.frequencyBinCount;
   const dataArray = new Uint8Array(bufferLength);
+  const fileName = audio1.src.slice(32, -4);
+  const songTitle = document.getElementById("song-title");
+
+  songTitle.innerHTML = fileName;
   // runs if you click anywhere in the container
   let height = canvas2.height;
   let width = canvas2.width;
@@ -71,7 +75,13 @@ container.addEventListener("click", function () {
 file.addEventListener("change", function () {
   const files = this.files;
   const audio1 = document.getElementById("audio1");
+  const playButton = document.getElementById("play-pause-icon");
+  const songTitle = document.getElementById("song-title");
+
+  songTitle.innerHTML = files[0].name.slice(0, -4);
+
   audio1.src = URL.createObjectURL(files[0]);
   audio1.load();
   audio1.play();
+  playButton.innerHTML = "pause";
 });
