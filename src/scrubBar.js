@@ -17,7 +17,6 @@ let scrub = {
 audio1.ontimeupdate = function () {
   let percent = (audio1.currentTime / audio1.duration) * 100;
   scrub.el.style.left = `calc(${percent}% + 10px)`;
-  console.log(percent);
 };
 
 timeline.onmousedown = function () {

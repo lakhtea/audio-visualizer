@@ -69,7 +69,7 @@ function drawCircles(ctx, radius, reducer, width, height) {
     circles.push([
       Math.random() * width,
       height + 50,
-      Math.random(),
+      Math.random() * 2 - 1,
       Math.floor(Math.random() * radius.length),
     ]);
     createCircle = false;
