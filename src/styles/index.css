@@ -141,7 +141,44 @@ span.material-icons {
 
 #song-title {
   position: absolute;
-  top: 10px;
-  font-size: 32px;
+  top: 0;
+  font-size: 28px;
   color: black;
+}
+#song-artist {
+  margin-top: 5px;
+  position: absolute;
+  top: 30px;
+  font-size: 12px;
+  color: black;
+}
+
+.button {
+  position: absolute;
+  z-index: 13;
+  height: 40px;
+  width: 90px;
+  top: 5px;
+  border-radius: 50px;
+  background: linear-gradient(#6550db, #7341bb, #832f96);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: black;
+  text-align: center;
+  font-size: 12px;
+}
+
+#song-0 {
+  left: 16.5%;
+}
+#song-1 {
+  left: 28%;
+}
+#song-2 {
+  left: 65%;
+}
+#song-3 {
+  left: 76.5%;
 }

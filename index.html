@@ -23,18 +23,23 @@
     <div id="container">
       <canvas id="canvas2"></canvas>
       <canvas id="canvas1"></canvas>
-      <audio id="audio1" src="./dist/music/7rings.mp3"></audio>
+      <audio id="audio1" src="/dist/music/7rings.mp3"></audio>
       <div id="scrub-container">
+        <button id="song-0" class="button"></button>
+        <button id="song-1" class="button"></button>
+        <button id="song-2" class="button"></button>
+        <button id="song-3" class="button"></button>
         <div id="song-title" class="song-title"></div>
-        <div id="play" class="play-pause">
+        <div id="song-artist" class="song-artist"></div>
+        <button id="play" class="play-pause">
           <span id="play-pause-icon" class="material-icons">play_arrow</span>
-        </div>
+        </button>
         <div id="timeline">
           <div id="scrub"></div>
         </div>
-        <div class="file-upload">
+        <button class="file-upload">
           <label for="fileupload">Upload</label>
-        </div>
+        </button>
       </div>
 
       <input type="file" id="fileupload" accept="audio/*" />

@@ -17,6 +17,7 @@ let scrub = {
 audio1.ontimeupdate = function () {
   let percent = (audio1.currentTime / audio1.duration) * 100;
   scrub.el.style.left = `calc(${percent}% + 10px)`;
+  console.log(percent);
 };
 
 timeline.onmousedown = function () {
@@ -95,11 +96,11 @@ document.onmouseup = function () {
 };
 
 play.addEventListener("click", function (e) {
-  if (!audio1.paused) {
-    audio1.pause();
-    playButton.innerHTML = "play_arrow";
-  } else if (audio1.paused) {
+  if (audio1.paused) {
     audio1.play();
     playButton.innerHTML = "pause";
+  } else if (!audio1.paused) {
+    audio1.pause();
+    playButton.innerHTML = "play_arrow";
   }
 });

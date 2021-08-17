@@ -2,6 +2,7 @@ import "./styles/index.css";
 import "./scrubBar";
 
 import { playVisualizer } from "./mainVisualizer";
+import { demos } from "./songs";
 
 const container = document.getElementById("container");
 const file = document.getElementById("fileupload");
@@ -23,9 +24,21 @@ let barWidth = 15;
 let x = canvas.width / 2;
 let y = canvas.height / 2;
 
+const audio1 = document.getElementById("audio1");
+const songTitle = document.getElementById("song-title");
+const songArtist = document.getElementById("song-artist");
+songTitle.innerHTML = demos[0].title;
+songArtist.innerHTML = demos[0].artist;
+
+const buttons = document.querySelectorAll(".button");
+buttons.forEach((button, idx) => {
+  button.innerHTML = demos[idx + 1].title;
+  button.onclick = () => changeAudioSource(demos[idx + 1], idx + 1);
+});
+
 container.addEventListener("click", function () {
-  const audio1 = document.getElementById("audio1");
   const audioCtx = new AudioContext();
+
   try {
     audioSource = audioCtx.createMediaElementSource(audio1);
   } catch (error) {
@@ -37,10 +50,7 @@ container.addEventListener("click", function () {
   analyser.fftSize = 256;
   const bufferLength = analyser.frequencyBinCount;
   const dataArray = new Uint8Array(bufferLength);
-  const fileName = audio1.src.slice(32, -4);
-  const songTitle = document.getElementById("song-title");
 
-  songTitle.innerHTML = fileName;
   // runs if you click anywhere in the container
   let height = canvas2.height;
   let width = canvas2.width;
@@ -77,11 +87,32 @@ file.addEventListener("change", function () {
   const audio1 = document.getElementById("audio1");
   const playButton = document.getElementById("play-pause-icon");
   const songTitle = document.getElementById("song-title");
+  const songArtist = document.getElementById("song-artist");
 
   songTitle.innerHTML = files[0].name.slice(0, -4);
+  songArtist.innerHTML = "User Upload";
 
   audio1.src = URL.createObjectURL(files[0]);
   audio1.load();
   audio1.play();
   playButton.innerHTML = "pause";
 });
+
+function changeAudioSource({ title, artist, song }, idx) {
+  const audio1 = document.getElementById("audio1");
+  const songTitle = document.getElementById("song-title");
+  const songArtist = document.getElementById("song-artist");
+  const playButton = document.getElementById("play-pause-icon");
+
+  audio1.src = song;
+  songTitle.innerHTML = title;
+  songArtist.innerHTML = artist;
+  audio1.play();
+  playButton.innerHTML = "pause";
+
+  [demos[0], demos[idx]] = [demos[idx], demos[0]];
+  buttons.forEach((button, idx) => {
+    button.innerHTML = demos[idx + 1].title;
+    button.onclick = () => changeAudioSource(demos[idx + 1], idx + 1);
+  });
+}

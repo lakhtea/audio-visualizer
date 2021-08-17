@@ -6,7 +6,6 @@ let sides = document.getElementById("n").value * 1;
 let createCircle = true;
 setInterval(() => (createCircle = true), 1000);
 let circles = [];
-let lowPitch = false;
 
 export const playVisualizer = (
   x,
@@ -66,11 +65,11 @@ export const playVisualizer = (
 };
 
 function drawCircles(ctx, radius, reducer, width, height) {
-  if (circles.length < 25 && createCircle) {
+  if (circles.length < 40 && createCircle) {
     circles.push([
       Math.random() * width,
-      height,
-      Math.random() * 3 - 1.5,
+      height + 50,
+      Math.random(),
       Math.floor(Math.random() * radius.length),
     ]);
     createCircle = false;
@@ -94,7 +93,7 @@ function drawCircles(ctx, radius, reducer, width, height) {
     ctx.restore();
     ctx.stroke();
 
-    if (circles[i][1] <= 0) {
+    if (circles[i][1] <= -25) {
       circles.shift();
     }
     circles[i][0] += circles[i][2];
@@ -161,12 +160,12 @@ function conditionalCircle(
     ctx.moveTo(0, 0);
     ctx.lineTo(0, barHeight);
     ctx.stroke();
-    if (i > bufferLength * 0.5) {
-      shape(ctx, barHeight, 1 / 2, x, y, inset, sides);
-    }
     if (i > bufferLength * 0.8) {
-      shape(ctx, barHeight, 3, x, y, inset, sides);
-      if (dataArray[i] > 0) lowPitch = true;
+      shape(ctx, barHeight, 2, x, y, inset, sides);
+    } else if (i > bufferLength * 0.5) {
+      shape(ctx, barHeight, 1, x, y, inset, sides);
+    } else if (i > bufferLength * 0.7) {
+      shape(ctx, barHeight, 1.5, x, y, inset, sides);
     }
     ctx.restore();
   }
