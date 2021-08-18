@@ -4,6 +4,10 @@ import "./scrubBar";
 import { playVisualizer } from "./mainVisualizer";
 import { demos } from "./songs";
 
+const modal = document.getElementById("modal-container");
+document.getElementById("continue-button").onclick = () =>
+  modal.classList.add("closed");
+
 const container = document.getElementById("container");
 const file = document.getElementById("fileupload");
 const canvas = document.getElementById("canvas1");
@@ -24,6 +28,7 @@ let barWidth = 15;
 let x = canvas.width / 2;
 let y = canvas.height / 2;
 
+const toggleUI = document.getElementById("toggle-ui");
 const audio1 = document.getElementById("audio1");
 const songTitle = document.getElementById("song-title");
 const songArtist = document.getElementById("song-artist");
@@ -37,8 +42,18 @@ buttons.forEach((button, idx) => {
 });
 
 container.addEventListener("click", function () {
-  const audioCtx = new AudioContext();
+  const playButton = document.getElementById("play-pause-icon");
+  audio1.play();
+  playButton.innerHTML = "pause";
+});
 
+audio1.addEventListener("play", function () {
+  const audioCtx = new AudioContext();
+  const playButton = document.getElementById("play-pause-icon");
+  if (audio1.paused) {
+    audio1.play();
+    playButton.innerHTML = "pause";
+  }
   try {
     audioSource = audioCtx.createMediaElementSource(audio1);
   } catch (error) {
@@ -82,7 +97,7 @@ container.addEventListener("click", function () {
 });
 
 // file upload
-file.addEventListener("change", function () {
+file.addEventListener("change", function (e) {
   const files = this.files;
   const audio1 = document.getElementById("audio1");
   const playButton = document.getElementById("play-pause-icon");
@@ -116,3 +131,20 @@ function changeAudioSource({ title, artist, song }, idx) {
     button.onclick = () => changeAudioSource(demos[idx + 1], idx + 1);
   });
 }
+
+toggleUI.addEventListener("click", function (e) {
+  e.stopPropagation();
+  const scrubContainer = document.getElementById("scrub-container");
+  const sliderContainer = document.getElementById("sliders");
+  const linksContainer = document.getElementById("my-links");
+
+  scrubContainer.classList.toggle("hidden");
+  sliderContainer.classList.toggle("hidden");
+  linksContainer.classList.toggle("hidden");
+
+  if (scrubContainer.classList.contains("hidden")) {
+    toggleUI.innerHTML = "Reveal UI";
+  } else {
+    toggleUI.innerHTML = "Hide UI";
+  }
+});

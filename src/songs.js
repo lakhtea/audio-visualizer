@@ -12,9 +12,9 @@ export const demos = [
   },
 
   {
-    title: "Shinzo wo Sasageyo!",
-    artist: "Linked Horizon",
-    song: "./dist/music/sasegayo.mp3",
+    title: "Adore You",
+    artist: "Harry Styles",
+    song: "./dist/music/adoreyou.mp3",
   },
 
   {
