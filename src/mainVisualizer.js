@@ -81,11 +81,9 @@ function drawCircles(ctx, radius, reducer, width, height) {
     gradient.addColorStop(0, `hsl(${hue * i}, 200%, ${30}%`);
     gradient.addColorStop(1, "#132356");
 
-    // ctx.strokeStyle = `hsl(${hue * i}, 200%, ${30}%)`;
     ctx.beginPath();
     ctx.save();
     ctx.translate(circles[i][0], circles[i][1]);
-    // ctx.translate(width / 2, height / 2);
     ctx.moveTo(0, 0 - barHeight);
     drawCircle(ctx, barHeight, reducer);
     ctx.fillStyle = gradient;
